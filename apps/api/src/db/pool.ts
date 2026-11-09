@@ -99,6 +99,28 @@ export async function createDatabase(config: mssql.config, options: { requestTim
   };
 }
 
+export async function waitForSqlServer(env: Env, options: { attempts?: number; delayMs?: number } = {}): Promise<void> {
+  const attempts = options.attempts ?? 45;
+  const delayMs = options.delayMs ?? 2000;
+  let last: unknown;
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      const master = await createDatabase(buildConnectionConfig(env, { database: "master", pool: { max: 1, min: 0 } }));
+      await master.close();
+      if (i > 1) logger.info({ attempt: i, host: env.DB_HOST, port: env.DB_PORT }, "SQL Server is ready");
+      return;
+    } catch (err) {
+      last = err;
+      logger.warn({ attempt: i, of: attempts, host: env.DB_HOST, port: env.DB_PORT }, "Waiting for SQL Server…");
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  const detail = last instanceof Error ? last.message : String(last);
+  throw new Error(
+    `SQL Server is not reachable at ${env.DB_HOST}:${env.DB_PORT}. Start it with: docker compose up -d\nLast error: ${detail}`,
+  );
+}
+
 let shared: Promise<Database> | null = null;
 
 /** Lazily connected application pool. */

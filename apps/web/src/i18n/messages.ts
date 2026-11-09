@@ -29,6 +29,8 @@ export const messages = {
     langTr: "TR",
     signIn: "Sign in",
     signInHint: "Use a demo account or the one you registered.",
+    apiDown:
+      "API is not running (502). In the project folder: docker compose up -d  then  npm run dev. Wait until SQL Server is healthy, then try again.",
     email: "Email",
     password: "Password",
     demoAccounts: "Demo accounts",
@@ -107,6 +109,8 @@ export const messages = {
     langTr: "TR",
     signIn: "Giriş yap",
     signInHint: "Demo hesabı veya kayıt olduğun hesabı kullan.",
+    apiDown:
+      "API çalışmıyor (502). Proje klasöründe: docker compose up -d  sonra  npm run dev. SQL Server ayağa kalkınca tekrar dene.",
     email: "E-posta",
     password: "Şifre",
     demoAccounts: "Demo hesaplar",

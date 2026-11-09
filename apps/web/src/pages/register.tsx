@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/field";
 import { ApiRequestError, api } from "@/lib/api";
+import { useT } from "@/i18n";
 import type { AuthResponse } from "@stratum/shared";
 import { useAuthStore } from "@/store/auth";
 import { AuthShell } from "./login";
 
 export function RegisterPage() {
+  const t = useT();
   const setSession = useAuthStore((s) => s.setSession);
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -33,7 +35,7 @@ export function RegisterPage() {
       navigate("/");
     } catch (err) {
       if (err instanceof ApiRequestError) {
-        setError(err.message);
+        setError(err.status === 502 || err.code === "api_down" ? t("apiDown") : err.message);
         setFields(err.fieldErrors);
       } else setError("Could not create the account");
     } finally {

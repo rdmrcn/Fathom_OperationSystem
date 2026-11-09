@@ -28,7 +28,8 @@ export function LoginPage() {
       setSession(auth);
       navigate("/");
     } catch (err) {
-      setError(err instanceof ApiRequestError ? err.message : "Could not sign in");
+      if (err instanceof ApiRequestError && (err.status === 502 || err.code === "api_down")) setError(t("apiDown"));
+      else setError(err instanceof ApiRequestError ? err.message : "Could not sign in");
     } finally {
       setLoading(false);
     }

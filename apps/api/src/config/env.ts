@@ -31,7 +31,7 @@ const envSchema = z.object({
   DB_PORT: z.coerce.number().int().default(1433),
   DB_NAME: z.string().default("Fathom"),
   DB_USER: z.string().default("sa"),
-  DB_PASSWORD: z.string().min(1, "DB_PASSWORD is required"),
+  DB_PASSWORD: z.string().min(1, "DB_PASSWORD is required").default("Fathom!Dev2026"),
   DB_ENCRYPT: z
     .enum(["true", "false"])
     .default("true")
@@ -46,7 +46,7 @@ const envSchema = z.object({
   DB_REPORTING_USER: z.string().optional(),
   DB_REPORTING_PASSWORD: z.string().optional(),
 
-  JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters"),
+  JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters").default("change-me-change-me-change-me-change-me-change-me"),
   JWT_ACCESS_TTL_SECONDS: z.coerce.number().int().min(60).default(15 * 60),
   JWT_REFRESH_TTL_DAYS: z.coerce.number().int().min(1).default(7),
 

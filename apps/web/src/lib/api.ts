@@ -95,7 +95,16 @@ export async function api<T>(path: string, options: RequestOptions = {}): Promis
       signal,
     });
 
-  let res = await send(token);
+  let res: Response;
+  try {
+    res = await send(token);
+  } catch {
+    throw new ApiRequestError(
+      0,
+      "api_down",
+      "Cannot reach the Fathom API. Start SQL Server with docker compose up -d, then npm run dev (API :4000, UI :5173).",
+    );
+  }
   if (res.status === 401 && auth && useAuthStore.getState().refreshToken) {
     const fresh = await refreshAccessToken();
     if (fresh) res = await send(fresh);

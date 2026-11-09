@@ -2,12 +2,14 @@ import { createApp } from "./app.js";
 import { getEnv } from "./config/env.js";
 import { createContext } from "./context.js";
 import { migrateAll } from "./db/migrate.js";
-import { closeDatabases, getDatabase, getReportingDatabase } from "./db/pool.js";
+import { closeDatabases, getDatabase, getReportingDatabase, waitForSqlServer } from "./db/pool.js";
 import { seedDatabase } from "./db/seed.js";
 import { logger } from "./lib/logger.js";
 
 async function main(): Promise<void> {
   const env = getEnv();
+
+  await waitForSqlServer(env);
 
   // Make a fresh environment usable with a single command: create the database,
   // apply pending migrations and seed demo data when the database is empty.

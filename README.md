@@ -31,21 +31,20 @@ GitHub: [rdmrcn/Fathom_OperationSystem](https://github.com/rdmrcn/Fathom_Operati
 
 ## Quick start
 
-Prerequisites: **Node.js 20+** and a running SQL Server on port 1433.
+Prerequisites: **Node.js 20+** and **Docker Desktop** (SQL Server 2022).
 
 ```bash
 git clone https://github.com/rdmrcn/Fathom_OperationSystem.git
 cd Fathom_OperationSystem
-cp .env.example .env          # default password: Fathom!Dev2026
-# Start SQL Server, e.g.:
-docker compose up -d
 npm install
-npm run db:migrate            # creates the database, schema, reporting login
-npm run db:seed               # demo workspace (idempotent)
-npm run dev                   # API :4000  ·  web :5173
+npm run dev                   # copies .env, starts SQL Server, then API :4000 + web :5173
 ```
 
-On first `npm run dev` the API also migrates and seeds if the database is empty (`AUTO_MIGRATE` / `AUTO_SEED`).
+`npm run dev` starts Docker SQL Server if it can, waits for port 1433, then the API and Vite. First boot can take a minute while the database image pulls. Open **http://localhost:5173** only after the terminal shows the API listening.
+
+If you already have SQL Server on 1433, skip Docker; the API uses `DB_PASSWORD=Fathom!Dev2026` from `.env.example`.
+
+On first start the API also migrates and seeds if the database is empty (`AUTO_MIGRATE` / `AUTO_SEED`).
 
 Open http://localhost:5173. After `npm run build`, `npm start` also serves the UI from the API at http://localhost:4000 (same origin, no proxy).
 
@@ -133,6 +132,17 @@ Schema lives in `apps/api/src/db/migrations/*.sql`. The runner splits on `GO` an
 - **Checkout of money is out of scope**; this is an internal ops tool, not a store.
 - **Refresh-token rotation**: only the SHA-256 of the token is stored. Presenting a revoked token revokes every session for that user.
 - **Assistant conversations** persist in `dbo.Conversations` / `dbo.Messages` with a JSON `ToolTrace`.
+
+## “Request failed (502)”
+
+The UI is running; the **API is not**. The login form talks to `localhost:4000`, which needs SQL Server.
+
+1. Install / start **Docker Desktop**.
+2. In the project folder: `docker compose up -d` then wait until `docker compose ps` shows `healthy`.
+3. `npm run dev` again and wait for `Fathom API listening`.
+4. Sign in at http://localhost:5173 with `admin@fathom.dev` / `Password123!`.
+
+Do not open only the Vite page after an API crash — the purple UI can still load while `/api/auth/login` returns 502.
 
 ## Known limits
 
