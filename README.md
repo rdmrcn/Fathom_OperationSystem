@@ -29,6 +29,8 @@ Recruiters see a lot of “todo apps with a chat widget.” Fathom is meant to s
 
 GitHub: [rdmrcn/Fathom_OperationSystem](https://github.com/rdmrcn/Fathom_OperationSystem)
 
+Türkçe adım adım kurulum: [`KULLANIM_KILAVUZU.txt`](./KULLANIM_KILAVUZU.txt)
+
 ## Quick start
 
 Prerequisites: **Node.js 20+** and **Docker Desktop** (SQL Server 2022).
