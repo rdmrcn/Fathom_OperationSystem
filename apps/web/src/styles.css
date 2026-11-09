@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+
+  --radius-xl: 0.9rem;
+  --radius-2xl: 1.25rem;
+
+  --animate-fade-in: fade-in 0.25s ease-out both;
+  --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-in-right: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-pulse-dot: pulse-dot 1.2s ease-in-out infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pulse-dot {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+}
+
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #f0f2f8;
+  --border: #e3e6ef;
+  --fg: #0f1222;
+  --muted: #5b6178;
+  --subtle: #9096ad;
+  --accent: #4f46e5;
+  --accent-fg: #ffffff;
+  --accent-soft: #eef0ff;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0b0f1a;
+  --surface: #111627;
+  --surface-2: #171d31;
+  --border: #232a44;
+  --fg: #e8eaf3;
+  --muted: #9aa1bd;
+  --subtle: #5f6686;
+  --accent: #818cf8;
+  --accent-fg: #0b0f1a;
+  --accent-soft: #1b2040;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-bg text-fg font-sans text-[15px] leading-relaxed;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 35%, transparent);
+  }
+  button, [role="button"] {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-border bg-surface shadow-[0_1px_0_0_rgb(0_0_0/0.02),0_8px_24px_-16px_rgb(0_0_0/0.25)];
+  }
+  .input {
+    @apply w-full rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm text-fg placeholder:text-subtle transition focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25 disabled:opacity-60;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted;
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .prose-chat {
+    @apply text-[14.5px] leading-relaxed;
+  }
+  .prose-chat p { @apply my-2 first:mt-0 last:mb-0; }
+  .prose-chat ul { @apply my-2 list-disc space-y-1 pl-5; }
+  .prose-chat ol { @apply my-2 list-decimal space-y-1 pl-5; }
+  .prose-chat strong { @apply font-semibold text-fg; }
+  .prose-chat code { @apply rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[13px]; }
+  .prose-chat pre { @apply my-2 overflow-x-auto rounded-xl bg-surface-2 p-3 font-mono text-[13px]; }
+  .prose-chat pre code { @apply bg-transparent p-0; }
+  .prose-chat h1, .prose-chat h2, .prose-chat h3 { @apply mt-3 mb-1 text-[15px] font-semibold; }
+  .prose-chat a { @apply text-accent underline underline-offset-2; }
+  .prose-chat table { @apply my-2 w-full text-left text-[13px]; }
+  .prose-chat th, .prose-chat td { @apply border-b border-border px-2 py-1 align-top; }
+}
